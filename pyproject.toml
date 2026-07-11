@@ -1,0 +1,139 @@
+[project]
+name = "harvest-forecast-mcp"
+version = "0.1.0"
+description = "MCP server for Harvest and Forecast APIs — let AI agents track time, manage projects, and update scheduling."
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.12"
+authors = [{ name = "AZX, PBC.", email = "oss@azx.io" }]
+keywords = ["harvest", "forecast", "mcp", "claude", "ai", "scheduling", "time-tracking"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Framework :: AsyncIO",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Software Development :: Libraries",
+    "Typing :: Typed",
+]
+dependencies = [
+    "harvest-forecast-py>=0.2.0",
+    "mcp[cli]>=1.2.0",
+]
+
+[project.scripts]
+harvest-forecast-mcp = "harvest_forecast_mcp.server:main"
+
+[project.urls]
+Homepage = "https://github.com/AZX-PBC-OSS/harvest-forecast-mcp"
+Repository = "https://github.com/AZX-PBC-OSS/harvest-forecast-mcp"
+Issues = "https://github.com/AZX-PBC-OSS/harvest-forecast-mcp/issues"
+Changelog = "https://github.com/AZX-PBC-OSS/harvest-forecast-mcp/blob/main/CHANGELOG.md"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/harvest_forecast_mcp"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src/harvest_forecast_mcp", "README.md", "LICENSE", "pyproject.toml"]
+
+[dependency-groups]
+dev = [
+    "pip-audit>=2.10.1",
+    "pyright>=1.1.411",
+    "pytest>=9.0.3",
+    "pytest-asyncio>=1.3.0",
+    "pytest-cov>=7.1.0",
+    "pytest-timeout>=2.4.0",
+    "respx>=0.23.1",
+    "ruff>=0.15.20",
+]
+
+[tool.uv]
+package = true
+exclude-newer = "48 hours"
+
+[tool.uv.exclude-newer-package]
+harvest-forecast-py = "0 days"
+
+# ---------- ruff ----------
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = [
+    "E", "F", "W",
+    "I",
+    "N",
+    "B",
+    "UP",
+    "SIM",
+    "S",
+    "RUF",
+    "C4",
+    "DTZ",
+    "TCH",
+    "PTH",
+]
+ignore = [
+    "S101",
+    "E501",
+    "TCH001", "TCH002", "TCH003",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101", "PLR2004", "DTZ001"]
+"src/harvest_forecast_mcp/server.py" = ["DTZ011"]
+
+[tool.ruff.format]
+quote-style = "double"
+
+# ---------- pyright ----------
+[tool.pyright]
+include = ["src", "tests"]
+pythonVersion = "3.12"
+typeCheckingMode = "strict"
+reportMissingTypeStubs = false
+venvPath = "."
+venv = ".venv"
+
+[[tool.pyright.executionEnvironments]]
+root = "src/harvest_forecast_mcp"
+reportUnknownArgumentType = false
+reportUnknownMemberType = false
+reportUnknownVariableType = false
+reportUnknownLambdaType = false
+
+[[tool.pyright.executionEnvironments]]
+root = "tests"
+reportPrivateUsage = false
+reportUnknownArgumentType = false
+reportUnknownVariableType = false
+
+# ---------- pytest ----------
+[tool.pytest.ini_options]
+addopts = "-ra --strict-markers --strict-config --timeout=5"
+testpaths = ["tests"]
+asyncio_mode = "auto"
+filterwarnings = ["error"]
+
+[tool.coverage.run]
+source = ["src/harvest_forecast_mcp"]
+omit = ["tests/*", "**/__pycache__/*"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise NotImplementedError",
+    "if TYPE_CHECKING:",
+    "if __name__ == .__main__.:",
+]

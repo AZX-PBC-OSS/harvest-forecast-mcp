@@ -1,6 +1,6 @@
 [project]
 name = "harvest-forecast-mcp"
-version = "0.1.0"
+version = "0.1.1"
 description = "MCP server for Harvest and Forecast APIs — let AI agents track time, manage projects, and update scheduling."
 readme = "README.md"
 license = { file = "LICENSE" }
